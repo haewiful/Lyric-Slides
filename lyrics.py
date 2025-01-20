@@ -68,13 +68,12 @@ def create_slide(text, font_size):
     text_frame = textBox.text_frame
     # center vertically
     text_frame.vertical_anchor = MSO_ANCHOR.MIDDLE
-    # text_frame.text = text
 
     # Style the text
     paragraph = text_frame.paragraphs[0]
     paragraph.alignment = PP_ALIGN.CENTER
     run = paragraph.add_run()
-    run.text = text # 
+    run.text = text
     run.font.size = Pt(font_size)
     run.font.color.rgb = RGBColor(255, 255, 255)
 
@@ -108,11 +107,12 @@ name_frame = tk.Frame(gui)
 name_frame.grid(row=2, column=0, columnspan=3, padx=10, pady=5, sticky="w")
 tk.Label(name_frame, text="File Name:").pack(side="left")
 
-name_entry = tk.Entry(name_frame, width=20)#, bd=1, relief='solid')
-name_entry.pack(side="left", padx=5)
+name_entry = tk.Entry(name_frame, width=20)
+name_entry.pack(side="left", padx=0)
 
-tk.Label(name_frame, text=".pptx").pack(side="left")
-# , bd=1, relief='solid').grid(row=3, column=2, padx=0, pady=5, sticky="w")
+tk.Label(name_frame, text=".pptx").pack(side="left", padx=0)
 
-tk.Button(gui, text="Create Slide", command=create_presentation).grid(row=3, columnspan=3, pady=20)
+# Create presentation button
+tk.Button(gui, text="Create Presentation", command=create_presentation).grid(row=3, columnspan=3, pady=20)
+
 gui.mainloop()
