@@ -1,25 +1,11 @@
 import tkinter as tk
+from tkinter import messagebox
 from pptx import Presentation
 from pptx.util import Inches, Pt
 from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
 from pptx.dml.color import RGBColor
 
-
-# # get input
-# print("가사 입력, 입력 끝날시 q")
-# text_input = []
-# while True:
-#     l = input("")
-#     if l=='q':
-#         break
-#     if l == "":
-#         continue
-#     text_input.append(l)
-
-
-
 def create_presentation():
-    print("create_presentation")
     # get text input
     text_input = text_entry.get("1.0", tk.END).strip()
     lines = text_input.splitlines()
@@ -33,10 +19,19 @@ def create_presentation():
         return
     
     # get font size
-    try:
-        font_size = int(font_entry.get())
-    except ValueError:
-        messagebox.showwarning("Input Error", "Font size has to be an integer.")
+    while True:
+        try:
+            font_size = int(font_entry.get())
+            break
+        except ValueError:
+            messagebox.showwarning("Input Error", "Font size has to be an integer.")
+            return
+
+    # get file name
+    file_name = name_entry.get()
+    if not file_name:
+        messagebox.showwarning("Input Error", "Please give a file name.")
+        return
 
     for idx in range(0, len(text_input), 2):
         text = text_input[idx]
@@ -44,11 +39,10 @@ def create_presentation():
             text += "\n" + text_input[idx+1]
         create_slide(text, font_size)
 
-    ppt.save('test.pptx')
-    print("done")
+    ppt.save(file_name+'.pptx')
+    gui.destroy()
 
 def create_slide(text, font_size):
-    print('create_slide')
     slide_layout = ppt.slide_layouts[6]
     slide = ppt.slides.add_slide(slide_layout)
 
@@ -90,51 +84,35 @@ ppt = Presentation()
 gui = tk.Tk()
 gui.title("Slide Maker")
 
-tk.Label(gui, text="Enter Lyrics").pack(pady=10)
-text_entry = tk.Text(gui, width=50, height=20)
+# Lyrics entry
+lyrics_frame = tk.Frame(gui)
+lyrics_frame.grid(row=0, column=0, columnspan=3, padx=10, pady=10, sticky="w")
+
+tk.Label(lyrics_frame, text="Enter Lyrics").pack()
+text_entry = tk.Text(lyrics_frame, width=50, height=20)
 text_entry.pack(pady=5)
 
 # font size
-tk.Label(gui, text="Font Size:").pack(pady=10)
+font_frame = tk.Frame(gui)
+font_frame.grid(row=1, column=0, columnspan=3, padx=10, pady=5, sticky="w")
+
 font_default = 36
-font_entry = tk.Entry(gui)
+tk.Label(font_frame, text="Font Size:").pack(side="left")
+
+font_entry = tk.Entry(font_frame, width=5)
 font_entry.insert(0, str(font_default))
-font_entry.pack(pady=5)
+font_entry.pack(side="left", padx=5)
 
-tk.Button(gui, text="Create Slide", command=create_presentation).pack(pady=20)
+# file name
+name_frame = tk.Frame(gui)
+name_frame.grid(row=2, column=0, columnspan=3, padx=10, pady=5, sticky="w")
+tk.Label(name_frame, text="File Name:").pack(side="left")
+
+name_entry = tk.Entry(name_frame, width=20)#, bd=1, relief='solid')
+name_entry.pack(side="left", padx=5)
+
+tk.Label(name_frame, text=".pptx").pack(side="left")
+# , bd=1, relief='solid').grid(row=3, column=2, padx=0, pady=5, sticky="w")
+
+tk.Button(gui, text="Create Slide", command=create_presentation).grid(row=3, columnspan=3, pady=20)
 gui.mainloop()
-
-# line_num = len(text_input)
-# for idx in range(0, len(text_input), 2):
-#     text = text_input[idx]
-#     if idx+1 < line_num:
-#         text += "\n" + text_input[idx+1]
-
-#     slide_layout = ppt.slide_layouts[6]
-#     slide = ppt.slides.add_slide(slide_layout)
-
-#     # slide background
-#     background = slide.background
-#     fill = background.fill
-#     fill.solid()
-#     fill.fore_color.rgb = RGBColor(0,0,0)
-
-#     # centering text box
-#     left = (slide_width - text_width.inches) / 2
-#     top = (slide_height - text_height.inches) / 2
-
-#     textBox = slide.shapes.add_textbox(Inches(left), Inches(top), text_width, text_height)
-#     text_frame = textBox.text_frame
-#     # center vertically
-#     text_frame.vertical_anchor = MSO_ANCHOR.MIDDLE
-#     # text_frame.text = text
-
-#     # Style the text
-#     paragraph = text_frame.paragraphs[0]
-#     paragraph.alignment = PP_ALIGN.CENTER
-#     run = paragraph.add_run()
-#     run.text = text
-#     run.font.size = Pt(36)
-#     run.font.color.rgb = RGBColor(255, 255, 255)
-
-# ppt.save('test.pptx')
