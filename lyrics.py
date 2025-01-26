@@ -95,7 +95,7 @@ text_entry.pack(pady=5)
 font_frame = tk.Frame(gui)
 font_frame.grid(row=1, column=0, columnspan=3, padx=10, pady=5, sticky="w")
 
-font_default = 36
+font_default = 48
 tk.Label(font_frame, text="Font Size:").pack(side="left")
 
 font_entry = tk.Entry(font_frame, width=5)
