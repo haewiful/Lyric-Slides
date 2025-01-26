@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
 from pptx import Presentation
-from pptx.util import Inches, Pt
+from pptx.util import Inches, Pt, Cm
 from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
 from pptx.dml.color import RGBColor
 
@@ -26,17 +26,33 @@ def create_presentation():
         except ValueError:
             messagebox.showwarning("Input Error", "Font size has to be an integer.")
             return
-
+    
     # get file name
     file_name = name_entry.get()
     if not file_name:
         messagebox.showwarning("Input Error", "Please give a file name.")
         return
 
-    for idx in range(0, len(text_input), 2):
+    # textbox width
+    text_box_width = ppt.slide_width.inches
+    # Approximate width per character (this is a rough estimate)
+    avg_char_width = font_size * 0.75  # Average width of characters (in points)
+    # Convert text box width from inches to points (1 inch = 72 points)
+    text_box_width_in_points = text_box_width * 72
+    # Estimate the number of characters per line (for korean)
+    chars_per_line = int(text_box_width_in_points / avg_char_width)
+
+    for idx in range(0, len(text_input), 1):
         text = text_input[idx]
-        if idx+1 < len(text_input):
-            text += "\n" + text_input[idx+1]
+        if idx+1 >= len(text_input):
+            break
+ 
+        # print("len(text):", len(text))
+        # print("chars per line:", chars_per_line)
+        # text doesn't overflow & next line doesn't overflow
+        if len(text) < chars_per_line and len(text_input[idx+1]) < chars_per_line:
+           text += "\n" + text_input[idx+1]
+           idx+=1
         create_slide(text, font_size)
 
     ppt.save(file_name+'.pptx')
@@ -51,8 +67,8 @@ def create_slide(text, font_size):
     slide_height = ppt.slide_height.inches
 
     # text box dimensions
-    text_width = Inches(8)
-    text_height = Inches(2)
+    # text_width = Inches(slide_width)
+    text_height = Cm(4.37)
     
     # slide background
     background = slide.background
@@ -79,6 +95,12 @@ def create_slide(text, font_size):
 
 
 ppt = Presentation()
+
+# Set the slide size (example: 16:9 widescreen using Inches)
+ppt.slide_width = Inches(13.33)  # Width
+ppt.slide_height = Inches(7.5)  # Height
+
+text_width = Inches(ppt.slide_width.inches)
 
 gui = tk.Tk()
 gui.title("Slide Maker")
