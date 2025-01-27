@@ -35,4 +35,11 @@ jobs:
         with:
           name: executable-${{ runner.os }}
           path: ./
+      
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: dist/executable-${{ runner.os }}  # Path to the file you want to attach to the release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # This automatically has access to your repo's token
 
