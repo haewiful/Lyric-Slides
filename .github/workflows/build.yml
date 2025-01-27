@@ -36,17 +36,17 @@ jobs:
           name: executable-${{ runner.os }}
           path: dist/
 
-      - name: Create GitHub Release Tag
-        run: |
-          VERSION_TAG=v1.${{ github.run_number }}
-          git tag $VERSION_TAG
-          git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }} $TAG_NAME
+      # - name: Create GitHub Release Tag
+      #   run: |
+      #     VERSION_TAG=v1.${{ github.run_number }}
+      #     git tag $VERSION_TAG
+      #     git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }} $TAG_NAME
       
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: dist/executable-${{ runner.os }}  # Path to the file you want to attach to the release
-          tag_name: v1.${{ github.run_number }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}  # This automatically has access to your repo's token
+      # - name: Create GitHub Release
+      #   uses: softprops/action-gh-release@v1
+      #   with:
+      #     files: dist/executable-${{ runner.os }}  # Path to the file you want to attach to the release
+      #     tag_name: v1.${{ github.run_number }}
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}  # This automatically has access to your repo's token
 
