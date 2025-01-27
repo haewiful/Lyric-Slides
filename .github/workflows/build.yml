@@ -34,13 +34,13 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: executable-${{ runner.os }}
-          path: ./
+          path: dist/
 
       - name: Create GitHub Release Tag
         run: |
           VERSION_TAG=v1.${{ github.run_number }}
           git tag $VERSION_TAG
-          
+          git push origin $TAG_NAME
       
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
