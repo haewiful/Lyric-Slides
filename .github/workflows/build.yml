@@ -35,6 +35,12 @@ jobs:
         with:
           name: executable-${{ runner.os }}
           path: ./
+
+      - name: Create GitHub Release Tag
+        run: |
+          VERSION_TAG=v1.${{ github.run_number }}
+          git tag $VERSION_TAG
+          
       
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
