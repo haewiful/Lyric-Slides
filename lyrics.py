@@ -42,7 +42,9 @@ def create_presentation():
     # Estimate the number of characters per line (for korean)
     chars_per_line = int(text_box_width_in_points / avg_char_width)
 
-    for idx in range(0, len(text_input), 1):
+    # for idx in range(0, len(text_input), 1):
+    idx = 0
+    while(idx < len(text_input)):
         text = text_input[idx]
         if idx+1 >= len(text_input):
             break
@@ -53,8 +55,9 @@ def create_presentation():
         if len(text) < chars_per_line and len(text_input[idx+1]) < chars_per_line:
            text += "\n" + text_input[idx+1]
            idx+=1
+        print(text)
         create_slide(text, font_size)
-
+        idx+=1
     ppt.save(file_name+'.pptx')
     gui.destroy()
 
