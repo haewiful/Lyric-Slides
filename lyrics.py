@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
+from tkinter import filedialog
 from pptx import Presentation
 from pptx.util import Inches, Pt, Cm
 from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
@@ -27,11 +28,11 @@ def create_presentation():
             messagebox.showwarning("Input Error", "Font size has to be an integer.")
             return
     
-    # get file name
-    file_name = name_entry.get()
-    if not file_name:
-        messagebox.showwarning("Input Error", "Please give a file name.")
-        return
+    # # get file name
+    # file_name = name_entry.get()
+    # if not file_name:
+    #     messagebox.showwarning("Input Error", "Please give a file name.")
+    #     return
 
     # textbox width
     text_box_width = ppt.slide_width.inches
@@ -58,7 +59,18 @@ def create_presentation():
         print(text)
         create_slide(text, font_size)
         idx+=1
-    ppt.save('./'+file_name+'.pptx')
+    
+    save_path = filedialog.asksaveasfilename(
+        defaultextension=".pptx",
+        filetypes=[("PowerPoint files", "*.pptx")],
+        title="Save Presentation As"
+    )
+
+    if not save_path:
+        return
+        
+    # ppt.save('./'+file_name+'.pptx')
+    ppt.save(save_path)
     gui.destroy()
 
 def create_slide(text, font_size):
@@ -127,15 +139,15 @@ font_entry = tk.Entry(font_frame, width=5)
 font_entry.insert(0, str(font_default))
 font_entry.pack(side="left", padx=5)
 
-# file name
-name_frame = tk.Frame(gui)
-name_frame.grid(row=2, column=0, columnspan=3, padx=10, pady=5, sticky="w")
-tk.Label(name_frame, text="File Name:").pack(side="left")
+# # file name
+# name_frame = tk.Frame(gui)
+# name_frame.grid(row=2, column=0, columnspan=3, padx=10, pady=5, sticky="w")
+# tk.Label(name_frame, text="File Name:").pack(side="left")
 
-name_entry = tk.Entry(name_frame, width=20)
-name_entry.pack(side="left", padx=0)
+# name_entry = tk.Entry(name_frame, width=20)
+# name_entry.pack(side="left", padx=0)
 
-tk.Label(name_frame, text=".pptx").pack(side="left", padx=0)
+# tk.Label(name_frame, text=".pptx").pack(side="left", padx=0)
 
 # Create presentation button
 tk.Button(gui, text="Create Presentation", command=create_presentation).grid(row=3, columnspan=3, pady=20)
