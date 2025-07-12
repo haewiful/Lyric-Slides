@@ -58,7 +58,7 @@ def create_presentation():
         print(text)
         create_slide(text, font_size)
         idx+=1
-    ppt.save(file_name+'.pptx')
+    ppt.save('./'+file_name+'.pptx')
     gui.destroy()
 
 def create_slide(text, font_size):
