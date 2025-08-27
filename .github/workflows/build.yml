@@ -8,6 +8,7 @@ on:
 
 jobs:
   build:
+    id: build_job
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -54,4 +55,31 @@ jobs:
       #     tag_name: v1.${{ github.run_number }}
       #   env:
       #     GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}  # This automatically has access to your repo's token
+    release:
+      needs: build
+      runs-on: ubuntu-latest
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      permissions:
+        contents: write
+      
+      steps:
+        - name: Download all build artifacts
+          uses: actions/download-artifact@v4
+        
+        - name: List downloaded files
+          uses: ls -R
+        
+        - name: Create release
+          uses: softprops/action-gh-release@v2
+          with:
+            files: |
+              executable-ubuntu-latest/lyrics.py
+              executable-macos-latest/lyrics.py
+              executable-windows-latest/lyrics.py
+            generate_release_notes: true
+            draft: false
+            prerelease: false
+          
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
