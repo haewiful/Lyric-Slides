@@ -2,9 +2,8 @@ name: Build Executable
 
 on:
   push:
-    branches:
-      - master
-  pull_request:
+    tags:
+      - 'v*'
 
 jobs:
   build:
