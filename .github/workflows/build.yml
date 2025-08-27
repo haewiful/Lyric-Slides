@@ -65,8 +65,8 @@ jobs:
         - name: Download all build artifacts
           uses: actions/download-artifact@v4
         
-        - name: List downloaded files
-          uses: ls -R
+        # - name: List downloaded files
+          # uses: ls -R
         
         - name: Create release
           uses: softprops/action-gh-release@v2
