@@ -1,6 +1,6 @@
 import tkinter as tk
-from tkinter import messagebox
-from tkinter import filedialog
+from tkinter import messagebox, filedialog, font, ttk
+# from tkinter import filedialog
 from pptx import Presentation
 from pptx.util import Inches, Pt, Cm
 from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
@@ -34,6 +34,9 @@ def create_presentation():
     #     messagebox.showwarning("Input Error", "Please give a file name.")
     #     return
 
+    # get font family
+    font_family = font_family_combobox.get()
+
     # textbox width
     text_box_width = ppt.slide_width.inches
     # Approximate width per character (this is a rough estimate)
@@ -57,7 +60,7 @@ def create_presentation():
            text += "\n" + text_input[idx+1]
            idx+=1
         print(text)
-        create_slide(text, font_size)
+        create_slide(text, font_size, font_family)
         idx+=1
     
     save_path = filedialog.asksaveasfilename(
@@ -73,7 +76,7 @@ def create_presentation():
     ppt.save(save_path)
     gui.destroy()
 
-def create_slide(text, font_size):
+def create_slide(text, font_size, font_family):
     slide_layout = ppt.slide_layouts[6]
     slide = ppt.slides.add_slide(slide_layout)
 
@@ -105,6 +108,7 @@ def create_slide(text, font_size):
     paragraph.alignment = PP_ALIGN.CENTER
     run = paragraph.add_run()
     run.text = text
+    run.font.name = font_family
     run.font.size = Pt(font_size)
     run.font.color.rgb = RGBColor(255, 255, 255)
 
@@ -129,15 +133,33 @@ text_entry = tk.Text(lyrics_frame, width=50, height=20)
 text_entry.pack(pady=5)
 
 # font size
-font_frame = tk.Frame(gui)
-font_frame.grid(row=1, column=0, columnspan=3, padx=10, pady=5, sticky="w")
+font_size_frame = tk.Frame(gui)
+font_size_frame.grid(row=1, column=0, columnspan=3, padx=10, pady=5, sticky="w")
 
 font_default = 48
-tk.Label(font_frame, text="Font Size:").pack(side="left")
+tk.Label(font_size_frame, text="Font Size:").pack(side="left")
 
-font_entry = tk.Entry(font_frame, width=5)
+font_entry = tk.Entry(font_size_frame, width=5)
 font_entry.insert(0, str(font_default))
 font_entry.pack(side="left", padx=5)
+
+# font family selection
+font_family_frame = tk.Frame(gui)
+font_family_frame.grid(row=2, column=0, columnspan=3, padx=10, pady=5, sticky="w")
+
+tk.Label(font_family_frame, text="Font:").pack(side="left")
+
+# Dynamically get the list of fonts from the system
+font_families = sorted(list(font.families()))
+
+font_family_combobox = ttk.Combobox(font_family_frame, values=font_families, state="readonly")
+# Check if a common font is in the list to set as a default
+if "Arial" in font_families:
+    font_family_combobox.set("Arial")
+else:
+    font_family_combobox.set(font_families[0])
+
+font_family_combobox.pack(side="left", padx=5)
 
 # # file name
 # name_frame = tk.Frame(gui)
