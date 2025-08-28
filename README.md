@@ -6,3 +6,4 @@
   - Move to the directory where the program relies using `cd`
   - Run the following command
     `chmod +x lyrics`
+  - Double click the file to run the program
