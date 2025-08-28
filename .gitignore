@@ -1,53 +1,42 @@
-# Folder view configuration files
+# macOS system files
 .DS_Store
-Desktop.ini
 
-# Thumbnail cache files
-._*
-Thumbs.db
-
-# Files that might appear on external disks
-.Spotlight-V100
-.Trashes
-
-# Compiled Python files
+# Byte-compiled / optimized / compiled files
+__pycache__/
 *.pyc
+*.pyd
+*.pyo
+lyrics
+lyrics.exe
 
-# Compiled C++ files
-*.out
+# Virtual environment
+venv/
+env/
+.env/
 
-# Application specific files
-venv
-node_modules
-.sass-cache
+# Distribution / packaging
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
 
-# Teraform files
-# Local .terraform directories
-**/.terraform/*
+# Testing
+.pytest_cache/
+.coverage
 
-# .tfstate files
-*.tfstate
-*.tfstate.*
+# Jupyter Notebook files
+.ipynb_checkpoints
 
-# Crash log files
-crash.log
+# IPython history
+.ipython_history
 
-# Ignore any .tfvars files that are generated automatically for each Terraform run. Most
-# .tfvars files are managed as part of configuration and so should be included in
-# version control.
-#
-# example.tfvars
+# pip-related files
+pip-log.txt
+pip-delete-this-directory.txt
 
-# Ignore override files as they are usually used to override resources locally and so
-# are not checked in
-override.tf
-override.tf.json
-*_override.tf
-*_override.tf.json
-
-# Include override files you do wish to add to version control using negated pattern
-#
-# !example_override.tf
-
-# Include tfplan files to ignore the plan output of command: terraform plan -out=tfplan
-# example: *tfplan*
+# Editors and IDEs
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
