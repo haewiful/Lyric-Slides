@@ -1,4 +1,4 @@
-** How to download and run the program **
+# How to download and run the program
 - Go to "Releases"
 - Select a version and download the program under "Assets" according to your OS.
 - MacOS Setup
