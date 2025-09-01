@@ -1,6 +1,10 @@
 # macOS system files
 .DS_Store
 
+# files from creating mac Intel executables
+lyrics.spec
+macIntel_lyrics.spec
+
 # Byte-compiled / optimized / compiled files
 __pycache__/
 *.pyc
