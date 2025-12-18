@@ -12,8 +12,8 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: ubuntu-latest
-            artifact_name: linux-x86_64
+          # - os: ubuntu-latest
+            # artifact_name: linux-x86_64
           - os: windows-latest
             artifact_name: windows-x86_64
           - os: macos-latest  # For Apple Silicon (ARM64)
@@ -76,7 +76,6 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            linux-x86_64/lyrics
             windows-x86_64/lyrics.exe
             macos-arm64/lyrics
           generate_release_notes: true
