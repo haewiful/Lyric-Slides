@@ -46,8 +46,7 @@ class Lyrics(tk.Tk):
         self.entry_widgets["font size"] = font_entry
         input_row_n+=1
 
-        ## font family entry
-        # Dynamically get the list of fonts from the system
+        ## font family entry: Dynamically get the list of fonts from the system
         font_families = sorted(list(font.families()))
 
         tk.Label(self.input_frame, text="Font:", anchor="e").grid(row=input_row_n, column=0, padx=0, pady=5, sticky="nsew")
@@ -104,15 +103,17 @@ class Lyrics(tk.Tk):
     def create_presentation(self):
         # get text input
         lyrics_text = self.entry_widgets["lyrics"].get("1.0", tk.END).strip()
-        lines = lyrics_text.splitlines()
-        lyrics_text = []
-        for l in lines:
-            if not l == "":
-                lyrics_text.append(l)
+        eng_text = self.entry_widgets["english lyrics"].get("1.0", tk.END).strip()
+        num_of_lines = int(self.entry_widgets["num of lines"].get().strip())
 
         if not lyrics_text:
             messagebox.showwarning("Input Error", "Please enter text for the slide.")
             return
+        lines = self.parse_lyrics(lyrics_text, num_of_lines)
+
+        eng_lines = []
+        if self.yn_var.get() and eng_text:
+            eng_lines = self.parse_lyrics(eng_text, num_of_lines)
         
         # get font size
         while True:
@@ -127,15 +128,12 @@ class Lyrics(tk.Tk):
         font_family = self.entry_widgets["font family"].get().strip()
 
         # for idx in range(0, len(lyrics_text), 1):
-        idx = 0
-        while(idx < len(lyrics_text)):
-            text = lyrics_text[idx]
-            if idx+1 >= len(lyrics_text):
-                self.create_slide(text, font_size, font_family)
-                break
-            text += "\n" + lyrics_text[idx+1]
-            idx+=2
-            self.create_slide(text, font_size, font_family)
+        # idx = 0
+        for idx in range(len(lines)):
+        # while(idx < len(lyrics_text)):
+            text = lines[idx]
+            eng_text = eng_lines[idx] if len(eng_lines) > idx else None
+            self.create_slide(text, font_size, font_family, eng_lyrics=eng_text)
         
         save_path = filedialog.asksaveasfilename(
             defaultextension=".pptx",
@@ -150,7 +148,22 @@ class Lyrics(tk.Tk):
         self.ppt.save(save_path)
         self.destroy()
 
-    def create_slide(self, text, font_size, font_family):
+    def parse_lyrics(self, lyrics_text, num_of_lines):
+        lines = lyrics_text.splitlines()
+        parsed_lyrics = []
+        temp = []
+        for line in lines:
+            if line.strip() == "":
+                continue
+            temp.append(line)
+            if len(temp) == num_of_lines:
+                parsed_lyrics.append("\n".join(temp))
+                temp = []
+        if temp:
+            parsed_lyrics.append("\n".join(temp))
+        return parsed_lyrics
+
+    def create_slide(self, text, font_size, font_family, eng_lyrics=None):
         slide_layout = self.ppt.slide_layouts[6]
         slide = self.ppt.slides.add_slide(slide_layout)
 
@@ -185,6 +198,32 @@ class Lyrics(tk.Tk):
         run.font.name = font_family
         run.font.size = Pt(font_size)
         run.font.color.rgb = RGBColor(255, 255, 255)
+
+        if eng_lyrics:
+            eng_text_height = Cm(2.5)
+            bottom_margin = 0.5  # inches
+
+            eng_left = 0
+            eng_top = slide_height - eng_text_height.inches - bottom_margin
+
+            eng_textbox = slide.shapes.add_textbox(
+                Inches(eng_left),
+                Inches(eng_top),
+                Inches(slide_width),
+                eng_text_height
+            )
+
+            eng_frame = eng_textbox.text_frame
+            eng_frame.vertical_anchor = MSO_ANCHOR.MIDDLE
+
+            eng_paragraph = eng_frame.paragraphs[0]
+            eng_paragraph.alignment = PP_ALIGN.CENTER
+
+            eng_run = eng_paragraph.add_run()
+            eng_run.text = eng_lyrics
+            eng_run.font.name = font_family
+            eng_run.font.size = Pt(font_size - 10)
+            eng_run.font.color.rgb = RGBColor(255, 255, 255)
 
     def center_window(self):
         self.update_idletasks()  # Ensure widgets are rendered
